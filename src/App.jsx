@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import useAuthStore from './store/useAuthStore';
 import useAppStore from './store/useAppStore';
 import { hasStoredPassword } from './utils/auth';
@@ -45,8 +45,8 @@ export default function App() {
   if (!isUnlocked) return <LoginPage />;
 
   return (
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <HashRouter>
       <AppShell />
-    </BrowserRouter>
+    </HashRouter>
   );
 }
