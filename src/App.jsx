@@ -45,7 +45,7 @@ export default function App() {
   if (!isUnlocked) return <LoginPage />;
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <AppShell />
     </BrowserRouter>
   );
