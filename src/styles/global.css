@@ -11,11 +11,11 @@ button, [role="button"] {
 
 /* ── Mobile breakpoint (≤ 640px) ─────────────────────────────── */
 @media (max-width: 640px) {
-  /* Layout token overrides — cascade into all inline style var() usages */
+  /* Layout token overrides — !important beats themes.css unconditional :root block (same specificity, loaded after) */
   :root {
-    --list-width: calc(100vw - 40px);
-    --board-pad: 10px 12px 16px;
-    --list-gap: 12px;
+    --list-width: calc(100vw - 40px) !important;
+    --board-pad: 10px 12px 16px !important;
+    --list-gap: 12px !important;
   }
 
   /* Board: snap-scroll horizontal */
@@ -30,6 +30,7 @@ button, [role="button"] {
 
   /* Navbar: hide date, expand settings hit area */
   .navbar-date { display: none !important; }
+  .navbar-wordmark-text { display: none !important; }
   .navbar-settings-btn {
     width: 44px !important;
     height: 44px !important;

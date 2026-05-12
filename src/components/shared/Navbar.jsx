@@ -9,7 +9,7 @@ function Wordmark() {
         <circle cx="11" cy="11" r="2" fill="var(--color-accent)" />
         <path d="M11 1.8v9.2L17.5 14" stroke="var(--color-text-primary)" strokeWidth="1.4" strokeLinecap="round" opacity="0.6" />
       </svg>
-      <div style={{
+      <div className="navbar-wordmark-text" style={{
         fontFamily: "'Plus Jakarta Sans', sans-serif",
         fontWeight: 600, fontSize: 15,
         letterSpacing: '0.12em',
