@@ -128,7 +128,7 @@ export default function List({ list, tasks, onOpen, showCompleted }) {
   };
 
   return (
-    <div ref={setRef} style={{ ...style, width: 'var(--list-width)', flexShrink: 0, display: 'flex', flexDirection: 'column', maxHeight: '100%' }}>
+    <div ref={setRef} className="board-list" style={{ ...style, width: 'var(--list-width)', flexShrink: 0, display: 'flex', flexDirection: 'column', maxHeight: '100%' }}>
       <div style={{
         background: 'var(--color-surface-2)',
         borderRadius: 'var(--radius-list)',

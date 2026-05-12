@@ -2,3 +2,84 @@
 @import '@fontsource/plus-jakarta-sans/500.css';
 @import '@fontsource/plus-jakarta-sans/600.css';
 @import '@fontsource/plus-jakarta-sans/700.css';
+
+/* ── Touch polish (all viewports) ─────────────────────────────── */
+button, [role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Mobile breakpoint (≤ 640px) ─────────────────────────────── */
+@media (max-width: 640px) {
+  /* Layout token overrides — cascade into all inline style var() usages */
+  :root {
+    --list-width: calc(100vw - 40px);
+    --board-pad: 10px 12px 16px;
+    --list-gap: 12px;
+  }
+
+  /* Board: snap-scroll horizontal */
+  .board-scroll {
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .board-list {
+    scroll-snap-align: start;
+  }
+
+  /* Navbar: hide date, expand settings hit area */
+  .navbar-date { display: none !important; }
+  .navbar-settings-btn {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 10px !important;
+  }
+
+  /* Task modal → bottom sheet */
+  .task-modal-backdrop {
+    position: fixed !important;
+    z-index: 70;
+  }
+  .task-modal-panel {
+    position: fixed !important;
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+    width: 100% !important;
+    max-height: 92dvh !important;
+    border-radius: 16px 16px 0 0 !important;
+    animation: meridianSlideUp 260ms var(--ease) !important;
+  }
+
+  /* Calendar: stack layout, day detail as bottom sheet */
+  .calendar-layout { flex-direction: column !important; }
+  .calendar-day-detail { display: none !important; }
+  .calendar-day-detail.is-open {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important; left: 0 !important; right: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: 55vh !important;
+    border-left: none !important;
+    border-top: 1px solid var(--color-border) !important;
+    border-radius: 16px 16px 0 0 !important;
+    box-shadow: var(--shadow-panel) !important;
+    z-index: 30 !important;
+    animation: meridianSlideUp 260ms var(--ease) !important;
+  }
+  .day-detail-close { display: flex !important; }
+  .day-detail-backdrop { display: block !important; }
+
+  /* Settings panel → full width */
+  .settings-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .settings-backdrop {
+    position: fixed !important;
+  }
+}

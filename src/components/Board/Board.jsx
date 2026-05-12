@@ -200,7 +200,7 @@ export default function Board({ onOpen, showCompleted }) {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div style={{
+      <div className="board-scroll" style={{
         flex: 1, overflowX: 'auto', overflowY: 'hidden',
         padding: 'var(--board-pad)',
         background: 'var(--color-bg)',

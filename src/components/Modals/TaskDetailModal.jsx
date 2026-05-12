@@ -81,17 +81,18 @@ export default function TaskDetailModal({ task, occurrenceDate = null, onClose }
   return (
     <>
       <div
+        className="task-modal-backdrop"
         onClick={save}
         style={{
-          position: 'absolute', inset: 0,
+          position: 'fixed', inset: 0,
           background: 'rgba(20, 20, 30, 0.32)',
           backdropFilter: 'blur(3px)',
           animation: 'meridianBackdrop 200ms var(--ease)',
           zIndex: 70,
         }}
       />
-      <div style={{
-        position: 'absolute',
+      <div className="task-modal-panel" style={{
+        position: 'fixed',
         top: '50%', left: '50%',
         transform: 'translate(-50%, -50%)',
         width: 520, maxHeight: '85%',

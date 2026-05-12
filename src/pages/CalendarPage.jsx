@@ -1,9 +1,20 @@
 import { useState, useMemo } from 'react';
 import Icon from '../components/shared/Icon';
 import TaskDetailModal from '../components/Modals/TaskDetailModal';
-import { getHue } from '../utils/listHues';
 import { getRecurrenceType, taskOccursOn, isOccurrenceCompleted } from '../utils/recurrence';
 import useAppStore from '../store/useAppStore';
+
+const PRIORITY_COLOR = {
+  high: 'var(--prio-high)',
+  medium: 'var(--prio-medium)',
+  low: 'var(--prio-low)',
+};
+
+function chipColor(task) {
+  if (task.priority) return PRIORITY_COLOR[task.priority];
+  if (task.listId === 'urgent') return 'var(--color-urgent)';
+  return 'var(--color-text-tertiary)';
+}
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -26,7 +37,7 @@ function buildMonthGrid(year, month) {
 }
 
 function CalendarChip({ task, lists, onOpen }) {
-  const hue = getHue(task.listId);
+  const color = chipColor(task);
   const list = lists.find((l) => l.id === task.listId);
   return (
     <button
@@ -36,6 +47,7 @@ function CalendarChip({ task, lists, onOpen }) {
         display: 'flex', alignItems: 'center', gap: 5,
         width: '100%', padding: '2px 6px 2px 5px', borderRadius: 5,
         background: 'var(--color-surface-2)', border: '1px solid var(--color-border)',
+        borderLeft: `3px solid ${color}`,
         fontSize: 11, lineHeight: 1.25, color: 'var(--color-text-primary)',
         textAlign: 'left', overflow: 'hidden',
         opacity: task.completed ? 0.5 : 1,
@@ -45,7 +57,7 @@ function CalendarChip({ task, lists, onOpen }) {
       onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-surface)'; }}
       onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-surface-2)'; }}
     >
-      <div style={{ width: 4, height: 4, borderRadius: '50%', background: hue, flexShrink: 0 }} />
+      <div style={{ width: 4, height: 4, borderRadius: '50%', background: color, flexShrink: 0 }} />
       <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, fontWeight: 500 }}>
         {task.title}
       </span>
@@ -101,82 +113,106 @@ function DayCell({ cell, tasks, lists, isToday, isSelected, onSelect, onOpen }) 
   );
 }
 
-function DayDetail({ iso, tasks, lists, onOpen }) {
+function DayDetail({ iso, tasks, lists, onOpen, isOpen, onClose }) {
   const [y, m, d] = iso.split('-').map(Number);
   const date = new Date(y, m - 1, d);
   const dowLabel = date.toLocaleDateString('en-US', { weekday: 'long' });
   const dayLabel = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
   return (
-    <div style={{
-      width: 240, flexShrink: 0,
-      background: 'var(--color-surface)',
-      borderLeft: '1px solid var(--color-border)',
-      display: 'flex', flexDirection: 'column', overflow: 'hidden',
-    }}>
-      <div style={{ padding: '20px 20px 16px' }}>
-        <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', color: 'var(--color-text-tertiary)', textTransform: 'uppercase' }}>{dowLabel}</div>
-        <div style={{ fontSize: 19, fontWeight: 600, color: 'var(--color-text-primary)', marginTop: 2, letterSpacing: '-0.01em' }}>{dayLabel}</div>
-        <div style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 4 }}>
-          {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'}
+    <>
+      {isOpen && (
+        <div
+          onClick={onClose}
+          className="day-detail-backdrop"
+          style={{ position: 'fixed', inset: 0, zIndex: 29, display: 'none' }}
+        />
+      )}
+      <div className={isOpen ? 'calendar-day-detail is-open' : 'calendar-day-detail'} style={{
+        width: 240, flexShrink: 0,
+        background: 'var(--color-surface)',
+        borderLeft: '1px solid var(--color-border)',
+        display: 'flex', flexDirection: 'column', overflow: 'hidden',
+      }}>
+        <div style={{ padding: '20px 20px 16px', position: 'relative' }}>
+          <button
+            onClick={onClose}
+            aria-label="Close day panel"
+            className="day-detail-close"
+            style={{
+              display: 'none',
+              position: 'absolute', top: 14, right: 14,
+              width: 30, height: 30, borderRadius: 8,
+              alignItems: 'center', justifyContent: 'center',
+              color: 'var(--color-text-secondary)',
+              background: 'var(--color-surface-2)',
+            }}
+          >
+            <Icon name="close" size={14} stroke={1.8} />
+          </button>
+          <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', color: 'var(--color-text-tertiary)', textTransform: 'uppercase' }}>{dowLabel}</div>
+          <div style={{ fontSize: 19, fontWeight: 600, color: 'var(--color-text-primary)', marginTop: 2, letterSpacing: '-0.01em' }}>{dayLabel}</div>
+          <div style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 4 }}>
+            {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'}
+          </div>
+        </div>
+
+        <div style={{ flex: 1, overflowY: 'auto', padding: '0 20px 20px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {tasks.length === 0 && (
+            <div style={{ padding: '12px 0', fontSize: 12.5, color: 'var(--color-text-tertiary)', lineHeight: 1.5 }}>
+              Nothing scheduled. A clear day.
+            </div>
+          )}
+          {tasks.map((t) => {
+            const list = lists.find((l) => l.id === t.listId);
+            const color = chipColor(t);
+            return (
+              <button
+                key={t._occurrenceDate ? `${t.id}-${t._occurrenceDate}` : t.id}
+                onClick={() => onOpen(t)}
+                style={{
+                  display: 'flex', flexDirection: 'column', alignItems: 'stretch',
+                  padding: '10px 12px',
+                  background: 'var(--color-surface)',
+                  border: '1px solid var(--color-border)',
+                  borderRadius: 'var(--radius-card)',
+                  textAlign: 'left', boxShadow: 'var(--shadow-card)',
+                  transition: 'all 160ms var(--ease)',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--color-border-strong)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--color-border)'; e.currentTarget.style.transform = 'none'; }}
+              >
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  fontSize: 10.5, fontWeight: 600, letterSpacing: '0.04em',
+                  color: 'var(--color-text-tertiary)', textTransform: 'uppercase',
+                }}>
+                  <div style={{ width: 5, height: 5, borderRadius: '50%', background: color }} />
+                  {list?.name || '—'}
+                </div>
+                <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--color-text-primary)', marginTop: 4, lineHeight: 1.4 }}>
+                  {t.title}
+                </div>
+                {t.priority && (
+                  <div style={{ marginTop: 6 }}>
+                    <span style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 5,
+                      padding: '2px 7px 2px 6px', borderRadius: 'var(--radius-pill)',
+                      fontSize: 10.5, fontWeight: 600,
+                      color: t.priority === 'high' ? 'var(--prio-high)' : t.priority === 'medium' ? 'var(--prio-medium)' : 'var(--prio-low)',
+                      border: '1px solid currentColor', opacity: 0.85,
+                    }}>
+                      <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'currentColor' }} />
+                      {t.priority[0].toUpperCase() + t.priority.slice(1)}
+                    </span>
+                  </div>
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
-
-      <div style={{ flex: 1, overflowY: 'auto', padding: '0 20px 20px', display: 'flex', flexDirection: 'column', gap: 6 }}>
-        {tasks.length === 0 && (
-          <div style={{ padding: '12px 0', fontSize: 12.5, color: 'var(--color-text-tertiary)', lineHeight: 1.5 }}>
-            Nothing scheduled. A clear day.
-          </div>
-        )}
-        {tasks.map((t) => {
-          const list = lists.find((l) => l.id === t.listId);
-          const hue = getHue(t.listId);
-          return (
-            <button
-              key={t._occurrenceDate ? `${t.id}-${t._occurrenceDate}` : t.id}
-              onClick={() => onOpen(t)}
-              style={{
-                display: 'flex', flexDirection: 'column', alignItems: 'stretch',
-                padding: '10px 12px',
-                background: 'var(--color-surface)',
-                border: '1px solid var(--color-border)',
-                borderRadius: 'var(--radius-card)',
-                textAlign: 'left', boxShadow: 'var(--shadow-card)',
-                transition: 'all 160ms var(--ease)',
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--color-border-strong)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--color-border)'; e.currentTarget.style.transform = 'none'; }}
-            >
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: 6,
-                fontSize: 10.5, fontWeight: 600, letterSpacing: '0.04em',
-                color: 'var(--color-text-tertiary)', textTransform: 'uppercase',
-              }}>
-                <div style={{ width: 5, height: 5, borderRadius: '50%', background: hue }} />
-                {list?.name || '—'}
-              </div>
-              <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--color-text-primary)', marginTop: 4, lineHeight: 1.4 }}>
-                {t.title}
-              </div>
-              {t.priority && (
-                <div style={{ marginTop: 6 }}>
-                  <span style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 5,
-                    padding: '2px 7px 2px 6px', borderRadius: 'var(--radius-pill)',
-                    fontSize: 10.5, fontWeight: 600,
-                    color: t.priority === 'high' ? 'var(--prio-high)' : t.priority === 'medium' ? 'var(--prio-medium)' : 'var(--prio-low)',
-                    border: '1px solid currentColor', opacity: 0.85,
-                  }}>
-                    <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'currentColor' }} />
-                    {t.priority[0].toUpperCase() + t.priority.slice(1)}
-                  </span>
-                </div>
-              )}
-            </button>
-          );
-        })}
-      </div>
-    </div>
+    </>
   );
 }
 
@@ -188,6 +224,7 @@ export default function CalendarPage() {
   const [cursor, setCursor] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
   const [selected, setSelected] = useState(isoDay(today.getFullYear(), today.getMonth(), today.getDate()));
   const [openTask, setOpenTask] = useState(null);
+  const [daySheetOpen, setDaySheetOpen] = useState(false);
 
   const grid = useMemo(() => buildMonthGrid(cursor.getFullYear(), cursor.getMonth()), [cursor]);
 
@@ -224,7 +261,7 @@ export default function CalendarPage() {
   };
 
   return (
-    <div style={{ flex: 1, display: 'flex', overflow: 'hidden', background: 'var(--color-bg)', height: '100%', position: 'relative' }}>
+    <div className="calendar-layout" style={{ flex: 1, display: 'flex', overflow: 'hidden', background: 'var(--color-bg)', height: '100%', position: 'relative' }}>
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflow: 'hidden' }}>
         {/* Calendar header */}
         <div style={{
@@ -300,7 +337,7 @@ export default function CalendarPage() {
               lists={lists}
               isToday={cell.iso === todayIso}
               isSelected={cell.iso === selected}
-              onSelect={setSelected}
+              onSelect={(iso) => { setSelected(iso); setDaySheetOpen(true); }}
               onOpen={handleOpen}
             />
           ))}
@@ -308,7 +345,14 @@ export default function CalendarPage() {
       </div>
 
       {/* Day detail rail */}
-      <DayDetail iso={selected} tasks={selectedTasks} lists={lists} onOpen={handleOpen} />
+      <DayDetail
+        iso={selected}
+        tasks={selectedTasks}
+        lists={lists}
+        onOpen={handleOpen}
+        isOpen={daySheetOpen}
+        onClose={() => setDaySheetOpen(false)}
+      />
 
       {openTask && (
         <TaskDetailModal

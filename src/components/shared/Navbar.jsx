@@ -86,7 +86,7 @@ export default function Navbar({ onOpenSettings }) {
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 12 }}>
-        <div style={{
+        <div className="navbar-date" style={{
           fontSize: 12, color: 'var(--color-text-tertiary)',
           fontVariantNumeric: 'tabular-nums', letterSpacing: '0.02em',
         }}>
@@ -95,6 +95,7 @@ export default function Navbar({ onOpenSettings }) {
         <button
           onClick={onOpenSettings}
           aria-label="Settings"
+          className="navbar-settings-btn"
           style={{
             width: 30, height: 30,
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',

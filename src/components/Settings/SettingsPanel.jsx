@@ -194,17 +194,18 @@ export default function SettingsPanel({ open, onClose }) {
   return (
     <>
       <div
+        className="settings-backdrop"
         onClick={onClose}
         style={{
-          position: 'absolute', inset: 0,
+          position: 'fixed', inset: 0,
           background: 'rgba(20, 20, 30, 0.25)',
           backdropFilter: 'blur(2px)',
           animation: 'meridianBackdrop 200ms var(--ease)',
           zIndex: 60,
         }}
       />
-      <div style={{
-        position: 'absolute', top: 0, right: 0, bottom: 0,
+      <div className="settings-panel" style={{
+        position: 'fixed', top: 0, right: 0, bottom: 0,
         width: 340,
         background: 'var(--color-surface)',
         borderLeft: '1px solid var(--color-border)',
