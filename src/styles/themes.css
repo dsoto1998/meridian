@@ -1,0 +1,219 @@
+/* Meridian — 6 pastel themes. All colors live here as CSS variables.
+   The data-theme attribute is set on <html>. */
+
+:root {
+  --radius-card: 7px;
+  --radius-list: 11px;
+  --radius-pill: 999px;
+  --shadow-card: 0 1px 2px rgba(20, 20, 30, 0.04), 0 1px 1px rgba(20, 20, 30, 0.03);
+  --shadow-card-hover: 0 2px 6px rgba(20, 20, 30, 0.06), 0 4px 12px rgba(20, 20, 30, 0.04);
+  --shadow-list: 0 1px 0 rgba(20, 20, 30, 0.02);
+  --shadow-panel: 0 16px 48px rgba(20, 20, 30, 0.12), 0 4px 16px rgba(20, 20, 30, 0.06);
+
+  /* Cozy density tokens (committed) */
+  --list-width: 252px;
+  --list-gap: 10px;
+  --list-header-pad: 10px 11px 7px;
+  --list-body-pad: 0 7px 7px;
+  --card-pad: 7px 9px 7px 11px;
+  --card-gap: 4px;
+  --card-title-size: 12.5px;
+  --card-meta-mt: 6px;
+  --board-pad: 14px 18px 18px;
+
+  /* Priority badge palette — shared across themes */
+  --prio-high: #d96b6b;
+  --prio-medium: #d9a05b;
+  --prio-low: #7aa6c9;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* ── Lavender ───────────────────────────────────────────────── */
+[data-theme="lavender"] {
+  --color-bg: #f6f2fb;
+  --color-bg-deep: #ece4f6;
+  --color-surface: #ffffff;
+  --color-surface-2: #f0eaf8;
+  --color-card-bg: #ffffff;
+  --color-accent: #8c6fc7;
+  --color-accent-soft: #e6dcf5;
+  --color-accent-ink: #4a3a73;
+  --color-text-primary: #2b2540;
+  --color-text-secondary: #6e618a;
+  --color-text-tertiary: #9b91b0;
+  --color-border: #e6dff2;
+  --color-border-strong: #d3c6e9;
+  --color-urgent: #c97585;
+  --color-urgent-soft: #f5e2e6;
+  --tint-glow: rgba(140, 111, 199, 0.08);
+}
+
+/* ── Sage ───────────────────────────────────────────────────── */
+[data-theme="sage"] {
+  --color-bg: #f1f5f0;
+  --color-bg-deep: #e4ecdf;
+  --color-surface: #ffffff;
+  --color-surface-2: #eaf1e6;
+  --color-card-bg: #ffffff;
+  --color-accent: #6a9070;
+  --color-accent-soft: #dde9d8;
+  --color-accent-ink: #2f4a35;
+  --color-text-primary: #243024;
+  --color-text-secondary: #5b6f5e;
+  --color-text-tertiary: #93a594;
+  --color-border: #e1eadc;
+  --color-border-strong: #c9d6c2;
+  --color-urgent: #c47865;
+  --color-urgent-soft: #f3e2db;
+  --tint-glow: rgba(106, 144, 112, 0.08);
+}
+
+/* ── Blush ──────────────────────────────────────────────────── */
+[data-theme="blush"] {
+  --color-bg: #fbf3f3;
+  --color-bg-deep: #f6e5e5;
+  --color-surface: #ffffff;
+  --color-surface-2: #f7eaea;
+  --color-card-bg: #ffffff;
+  --color-accent: #c97a8c;
+  --color-accent-soft: #f3dde2;
+  --color-accent-ink: #6e3d49;
+  --color-text-primary: #322226;
+  --color-text-secondary: #7a5f64;
+  --color-text-tertiary: #ad9095;
+  --color-border: #f0e0e2;
+  --color-border-strong: #e3c9cd;
+  --color-urgent: #c25b6b;
+  --color-urgent-soft: #f3d9dd;
+  --tint-glow: rgba(201, 122, 140, 0.08);
+}
+
+/* ── Sky ────────────────────────────────────────────────────── */
+[data-theme="sky"] {
+  --color-bg: #f0f5fb;
+  --color-bg-deep: #e1ecf6;
+  --color-surface: #ffffff;
+  --color-surface-2: #e8f0f8;
+  --color-card-bg: #ffffff;
+  --color-accent: #6a90c4;
+  --color-accent-soft: #dce8f3;
+  --color-accent-ink: #2f4870;
+  --color-text-primary: #1f2b3d;
+  --color-text-secondary: #586a82;
+  --color-text-tertiary: #8e9db2;
+  --color-border: #dfe8f1;
+  --color-border-strong: #c2d3e3;
+  --color-urgent: #c2716d;
+  --color-urgent-soft: #f0dad8;
+  --tint-glow: rgba(106, 144, 196, 0.08);
+}
+
+/* ── Peach ──────────────────────────────────────────────────── */
+[data-theme="peach"] {
+  --color-bg: #fbf4ec;
+  --color-bg-deep: #f5e6d3;
+  --color-surface: #ffffff;
+  --color-surface-2: #f7ebdc;
+  --color-card-bg: #ffffff;
+  --color-accent: #c8865c;
+  --color-accent-soft: #f3e0cd;
+  --color-accent-ink: #6e4326;
+  --color-text-primary: #32261c;
+  --color-text-secondary: #7a6356;
+  --color-text-tertiary: #b09786;
+  --color-border: #f0e2d1;
+  --color-border-strong: #e3ccae;
+  --color-urgent: #c5605a;
+  --color-urgent-soft: #f3d8d4;
+  --tint-glow: rgba(200, 134, 92, 0.08);
+}
+
+/* ── Slate (near-dark, cool neutral) ────────────────────────── */
+[data-theme="slate"] {
+  --color-bg: #1f232b;
+  --color-bg-deep: #181b22;
+  --color-surface: #262a33;
+  --color-surface-2: #2c313c;
+  --color-card-bg: #2c313c;
+  --color-accent: #8d9bba;
+  --color-accent-soft: #353c4a;
+  --color-accent-ink: #c9d2e6;
+  --color-text-primary: #e6e9f2;
+  --color-text-secondary: #a4abbd;
+  --color-text-tertiary: #6f778a;
+  --color-border: #353a45;
+  --color-border-strong: #434957;
+  --color-urgent: #d98a8a;
+  --color-urgent-soft: #3f323a;
+  --tint-glow: rgba(141, 155, 186, 0.08);
+}
+
+/* ── Base reset & app shell ─────────────────────────────────── */
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--color-bg-deep);
+  color: var(--color-text-primary);
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.005em;
+  transition: background-color 280ms var(--ease), color 280ms var(--ease);
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+input, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* ── Custom scrollbars ──────────────────────────────────────── */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-tertiary);
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+::-webkit-scrollbar-corner { background: transparent; }
+
+/* ── Utility ───────────────────────────────────────────────── */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+@keyframes meridianFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes meridianSlideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes meridianBackdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes meridianModalPop {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
